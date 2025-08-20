@@ -19,7 +19,6 @@ This repository contains model designs, deployment solutions for state-of-the-ar
    - [VAD-TensorRT](./AV-Solutions/vad-trt/)
    
 - [Hardware-friendly Models](./Models/)
-   - [ConvSelfAttention](./Models/ConvSelfAttention/)
    - [DEST](./Models/DEST/)
    - [ReduceFormer](./Models/ReduceFormer/)
    - [Swin-Free](./Models/SwinFree/)
