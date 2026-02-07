@@ -1,6 +1,7 @@
-## PTX/Cubin Compilation and TensorRT Plugin Integration Guide for BEVPoolV2 Triton Kernel
+## Guide for TensorRT Plugin with Triton Kernels
 
-This guide introduces a Triton-based approach to TensorRT plugin development: compiling a Triton kernel to PTX/Cubin and loading it at runtime. In the case of BEVPoolV2, this approach achieves lower latency than both naive implementation and [CUDA-based TensorRT plugin implementations](https://github.com/DerryHub/BEVFormer_tensorrt/tree/main/TensorRT).
+This guide introduces a Triton-based approach to TensorRT plugin development: compiling a Triton kernel to PTX/Cubin and loading it at runtime. 
+Demonstrated via a custom op [BEVPoolV2](https://arxiv.org/abs/2211.17111), this approach achieves lower latency than both naive implementation and [CUDA-based TensorRT plugin implementations](https://github.com/DerryHub/BEVFormer_tensorrt/tree/main/TensorRT).
 
 ### What This Guide Covers
 
@@ -24,22 +25,12 @@ Benchmarks on the NVIDIA DRIVE Thor platform with TensorRT 10.15 show that the T
 
 Numbers are median latency (ms) measured per-operator; the results may vary by configuration.
 
-### Background: Understanding PTX
-
-For authoritative background on PTX and the rationale for embedding PTX/Cubin to preserve forward compatibility across GPU generations, see NVIDIA's "Understanding PTX, the Assembly Language of CUDA GPU Computing" [developer blog](https://developer.nvidia.com/blog/understanding-ptx-the-assembly-language-of-cuda-gpu-computing/).
-
-PTX (Parallel Thread Execution) is NVIDIA's intermediate representation that sits between high-level GPU code (CUDA, Triton) and machine-specific Cubin binaries. Key benefits of this workflow include:
-- **Forward Compatibility**: PTX can be JIT-compiled at runtime for GPU architectures not available at compile time.
-- **Offline Compilation**: Pre-compiling to Cubin eliminates JIT overhead and ensures deterministic kernel behavior.
-- **Cross-Generation Portability**: Distributing PTX alongside SM-targeted Cubins enables the same plugin to run efficiently across multiple GPU generations.
-
 ### Table of Contents
-1. [BEVPoolV2 Triton Kernel](#1-bevpoolv2-triton-kernel)
+1. [Write BEVPoolV2 Triton Kernel](#1-bevpoolv2-triton-kernel)
 2. [Compile the Triton Kernel to PTX/Cubin](#2-compile-the-triton-kernel-to-ptxcubin)
 3. [Export ONNX with the Correct Plugin Op Name](#3-export-onnx-with-the-correct-plugin-op-name)
 4. [TensorRT: Build Plugin and Run Inference](#4-tensorrt-build-plugin-and-run-inference)
 5. [Tuning Notes (BLOCK_C, num_warps, SM, precision)](#5-tuning-notes-block_c-num_warps-sm-precision)
-
 
 ---
 
@@ -373,7 +364,15 @@ To achieve optimal performance, tune several interdependent compile-time paramet
 
 - **precision (dtype)**: Compile artifacts for the dtype you plan to run (e.g., FP16), and ensure the ONNX graph + TensorRT engine are built in a compatible precision mode (e.g., `trtexec --fp16` when appropriate).
 
-
 For further reading on GPU kernel optimization and Triton performance tuning, see the [Triton Tutorials](https://triton-lang.org/main/getting-started/tutorials/index.html) and NVIDIA's [CUDA C++ Best Practices Guide](https://docs.nvidia.com/cuda/cuda-c-best-practices-guide/).
 
 ---
+
+### Background: Understanding PTX
+
+For authoritative background on PTX and the rationale for embedding PTX/Cubin to preserve forward compatibility across GPU generations, see NVIDIA's "Understanding PTX, the Assembly Language of CUDA GPU Computing" [developer blog](https://developer.nvidia.com/blog/understanding-ptx-the-assembly-language-of-cuda-gpu-computing/).
+
+PTX (Parallel Thread Execution) is NVIDIA's intermediate representation that sits between high-level GPU code (CUDA, Triton) and machine-specific Cubin binaries. Key benefits of this workflow include:
+- **Forward Compatibility**: PTX can be JIT-compiled at runtime for GPU architectures not available at compile time.
+- **Offline Compilation**: Pre-compiling to Cubin eliminates JIT overhead and ensures deterministic kernel behavior.
+- **Cross-Generation Portability**: Distributing PTX alongside SM-targeted Cubins enables the same plugin to run efficiently across multiple GPU generations.

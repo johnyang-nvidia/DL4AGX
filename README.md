@@ -7,7 +7,7 @@ This repository contains model designs, deployment solutions for state-of-the-ar
 ## Table of Contents
 - [Deployment and Inference Solutions](./AV-Solutions/)
    - [ONNX Export Guidance for TensorRT](./AV-Solutions/onnx-export-guidance/)
-   - [Triton PTX/Cubin Integration with TensorRT](./AV-Solutions/triton2cubin-plugin-guidance/)
+   - [Triton PTX/Cubin Integration for TensorRT Plugins](./AV-Solutions/triton2cubin-plugin-guidance/)
    - [BEVFormer INT8 Explicit Quantization](./AV-Solutions/bevformer-int8-eq/)
    - [DCNv4 TensorRT](./AV-Solutions/dcnv4-trt/)
    - [Far3D TensorRT](./AV-Solutions/far3d-trt/)
