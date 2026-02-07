@@ -366,13 +366,6 @@ To achieve optimal performance, tune several interdependent compile-time paramet
 
 For further reading on GPU kernel optimization and Triton performance tuning, see the [Triton Tutorials](https://triton-lang.org/main/getting-started/tutorials/index.html) and NVIDIA's [CUDA C++ Best Practices Guide](https://docs.nvidia.com/cuda/cuda-c-best-practices-guide/).
 
----
-
-### Background: Understanding PTX
-
 For authoritative background on PTX and the rationale for embedding PTX/Cubin to preserve forward compatibility across GPU generations, see NVIDIA's "Understanding PTX, the Assembly Language of CUDA GPU Computing" [developer blog](https://developer.nvidia.com/blog/understanding-ptx-the-assembly-language-of-cuda-gpu-computing/).
 
-PTX (Parallel Thread Execution) is NVIDIA's intermediate representation that sits between high-level GPU code (CUDA, Triton) and machine-specific Cubin binaries. Key benefits of this workflow include:
-- **Forward Compatibility**: PTX can be JIT-compiled at runtime for GPU architectures not available at compile time.
-- **Offline Compilation**: Pre-compiling to Cubin eliminates JIT overhead and ensures deterministic kernel behavior.
-- **Cross-Generation Portability**: Distributing PTX alongside SM-targeted Cubins enables the same plugin to run efficiently across multiple GPU generations.
+---
